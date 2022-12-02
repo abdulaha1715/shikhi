@@ -1,0 +1,46 @@
+
+/*# sourceMappingURL=custom.min.css.map */
+.user-image {
+    width: 50px;
+}
+
+div#status_message {
+    position: absolute;
+    width: 20%;
+    top: 85px;
+    right: 0;
+    z-index: 9;
+    border-radius: 5px 0 0 5px;
+    transition: 0.6s;
+}
+
+div#status_message p {
+    margin: 0;
+}
+
+.alert.close {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.file-delete {
+    display: inline-block;
+}
+
+.file-delete button {
+    display: inline-block;
+    border: none;
+    background: transparent;
+}
+
+.hidden {
+    display: none;
+}
+
+.pagination {
+    margin: 30px 20px 35px;
+}
+
+label {
+    cursor: pointer;
+}
