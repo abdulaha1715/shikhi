@@ -48,9 +48,24 @@
                                 <i class="mdi mdi-view-grid-plus-outline"></i> <span data-key="t-apps">Tag</span>
                             </a>
                         </li> <!-- end Tag Menu -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('course.*') ? 'active' : ''}}"   href="#courseLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="courseLayouts">
+                                <i class="mdi mdi-view-carousel-outline"></i> <span data-key="t-layouts">Courses</span>
+                            </a>
+                            <div class="collapse menu-dropdown {{ request()->routeIs('course.*') ? 'show' : ''}}" id="courseLayouts">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('course.index') }}" class="nav-link {{ request()->routeIs('course.index') ? 'active' : ''}}" target="" data-key="t-horizontal">View All</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('course.create') }}" class="nav-link {{ request()->routeIs('course.create') ? 'active' : ''}}" target="" data-key="t-two-column">Create Course</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li> <!-- end Course Menu -->
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link " role="button">
+                            <a class="nav-link menu-link {{ request()->routeIs('profile.*') ? 'active' : ''}}" href="{{ route( 'profile.show', auth()->id() ) }}" role="button">
                                 <i class="mdi mdi-view-grid-plus-outline"></i> <span data-key="t-apps">User</span>
                             </a>
                         </li> <!-- end User Menu -->

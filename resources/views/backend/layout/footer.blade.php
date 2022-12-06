@@ -632,37 +632,48 @@
 <script src="{{ asset('./backend/assets/libs/feather-icons/feather.min.js') }}"></script>
 <script src="{{ asset('./backend/assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
 
-@yield('message-script')
 
-@if ( request()->routeIs('*edit*') )
+@if ( request()->routeIs('*edit*') || request()->routeIs('*create*') )
+
+<!-- Filepond js -->
+<script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
 <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js">
-</script>
+<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
 <script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-<script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
 <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+
 <script src="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-
 <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+
 <script>
-FilePond.registerPlugin(
-FilePondPluginFileEncode,
-FilePondPluginFileValidateSize,
-FilePondPluginFileValidateType,
-FilePondPluginImageCrop,
-FilePondPluginImagePreview,
-FilePondPluginImageExifOrientation,
-FilePondPluginImageResize,
-FilePondPluginImageEdit
-);
-$('.imput-image').filepond({
-storeAsFile: true
-});
+    // activation plugin
+    FilePond.registerPlugin(
+        FilePondPluginFileEncode,
+        FilePondPluginFileValidateSize,
+        FilePondPluginFileValidateType,
+        FilePondPluginImageCrop,
+        FilePondPluginImagePreview,
+        FilePondPluginImageExifOrientation,
+        FilePondPluginImageResize,
+        FilePondPluginImageEdit
+    );
+
+    FilePond.setOptions({
+        instantUpload: false,
+    });
+
 </script>
+
 @endif
+
+<!-- page script -->
+@stack('script')
+
 <!-- App js -->
 <script src="{{ asset('./backend/assets/js/app.js') }}"></script>
 </body>

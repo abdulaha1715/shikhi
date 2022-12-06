@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('description');
             $table->string('thumbnail', 125);
             $table->longText('side_note');
+            $table->enum('level', ['beginner', 'intermediate', 'expert'])->default('beginner');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->foreignId('category_id');
             $table->foreignId('teacher_id');

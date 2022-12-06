@@ -5,7 +5,7 @@
 }
 
 div#status_message {
-    position: absolute;
+    position: fixed;
     width: 20%;
     top: 85px;
     right: 0;
@@ -43,4 +43,8 @@ div#status_message p {
 
 label {
     cursor: pointer;
+}
+
+.tox-promotion {
+    display: none;
 }

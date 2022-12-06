@@ -27,10 +27,33 @@
     <link href="{{ asset('./backend/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{ asset('./backend/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
+
+
+    @if ( request()->routeIs('*edit*') || request()->routeIs('*create*') )
+
+    <!-- Filepond css -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
+    <!-- Filepond js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+
+    @endif
+
+    <!-- page style -->
+    @stack('style')
+
     <!-- custom Css-->
     <link href="{{ asset('./backend/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
     {{-- jQuery --}}
     <script src="{{ asset('./backend/assets/js/plugins.js') }}"></script>
+
+    <!-- tinymce js -->
+    <script src="/backend/tinymce/tinymce.min.js"></script>
 </head>
 
 <body>
