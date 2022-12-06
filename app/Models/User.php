@@ -23,6 +23,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    // One to One Relationsip
+    public function profile() {
+        return $this->hasOne(TeacherProfile::class, 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

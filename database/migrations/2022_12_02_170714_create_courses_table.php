@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('slug', 125);
             $table->longText('description');
             $table->string('thumbnail', 125);
-            $table->longText('requirements');
-            $table->longText('audience');
+            $table->longText('side_note');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->foreignId('category_id');
             $table->foreignId('teacher_id');
