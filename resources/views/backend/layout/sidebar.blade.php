@@ -70,28 +70,6 @@
                             </a>
                         </li> <!-- end User Menu -->
 
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
-                                <i class="mdi mdi-view-carousel-outline"></i> <span data-key="t-layouts">Settings</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarLayouts">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="layouts-horizontal.html" class="nav-link" target="_blank" data-key="t-horizontal">Horizontal</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="layouts-detached.html" class="nav-link" target="_blank" data-key="t-detached">Detached</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="layouts-two-column.html" class="nav-link" target="_blank" data-key="t-two-column">Two Column</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="layouts-vertical-hovered.html" class="nav-link" target="_blank" data-key="t-hovered">Hovered</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li> <!-- end Dashboard Menu -->
-
                     </ul>
                 </div>
                 <!-- Sidebar -->
