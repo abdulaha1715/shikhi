@@ -44,7 +44,28 @@
                                         <td>{{ $course->name }}</td>
                                         <td class="text-capitalize text-center">{{ $course->status }}</td>
                                         <td class="text-center">{{ $course->category->name }}</td>
-                                        <td class="text-center">{{ $course->category_id }}</td>
+                                        <td class="text-center">
+                                            @if (count($course->lessons) > 0)
+                                            <button class="btn btn-primary position-relative p-0 avatar-xs rounded">
+                                                <span
+                                                    class="avatar-title bg-transparent text-reset">
+                                                    {{ count($course->lessons) }}
+                                                </span>
+                                            </button>
+                                        @else
+
+                                            <button class="btn text-white bg-danger position-relative p-0 avatar-xs rounded">
+                                                <span
+                                                    class="avatar-title bg-transparent text-reset">
+                                                    {{ count($course->lessons) }}
+                                                </span>
+                                            </button>
+                                            <span
+                                                class="badge bg-danger">
+                                                {{ count($course->lessons) }}
+                                            </span>
+                                        @endif
+                                        </td>
                                         <td class="text-center">
                                             <a href="{{ route('course.edit', $course) }}"><i class="ri-edit-line fs-4 text-primary"></i></a>
                                             <a href=""><i class="ri-eye-line fs-4 text-success"></i></a>

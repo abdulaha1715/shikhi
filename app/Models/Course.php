@@ -20,4 +20,10 @@ class Course extends Model
     public function teacher() {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
     }
+
+    // One to many Relationsip
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class, 'course_id', 'id');
+    }
 }

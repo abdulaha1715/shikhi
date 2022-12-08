@@ -137,6 +137,52 @@
     <!-- end row -->
 </form>
 
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Lessons</h4>
+                <a href="{{ route('lesson.create') }}?course_id={{ $course->id }}">Create Lesson</a>
+            </div><!-- end card header -->
+        </div><!-- end card -->
+    </div>
+    <!-- end col -->
+</div>
+
+<!-- end row -->
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="card card-body">
+            <label for="audience" class="form-label">Lessons</label>
+            <div class="list-group col nested-list nested-sortable-handle sortable-lessons">
+
+                @forelse ($course->lessons as $lesson)
+                    <div class="list-group-item nested-2 cursor-pointer align-items-center d-flex">
+                        <div class="drag align-items-center flex-grow-1">
+                            <i class="ri-drag-move-fill align-bottom handle"></i> {{ $lesson->name }}
+                        </div>
+                        <div class="edit-icon align-items-center">
+                            <a href="{{ route('lesson.edit', $lesson) }}"><i class="ri-edit-line fs-4 text-primary"></i></a>
+                            <a href=""><i class="ri-eye-line fs-4 text-success"></i></a>
+                            <form action="{{ route('lesson.destroy', $lesson->id) }}" method="POST" class="file-delete" onsubmit="return confirm('Do you want to delete?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class=""><i class="ri-delete-bin-5-line fs-4 text-danger"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-center border rounded border-danger p-2 text-danger cursor-pointer">
+                        No Lessons found yet!!!
+                    </p>
+                @endforelse
+
+            <div class="card">
+        </div><!-- end card-body -->
+    </div>
+</div>
+
 @endsection
 
 

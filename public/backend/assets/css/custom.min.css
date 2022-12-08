@@ -48,3 +48,7 @@ label {
 .tox-promotion {
     display: none;
 }
+
+.drag.align-items-center .handle {
+    top: 6px !important;
+}
