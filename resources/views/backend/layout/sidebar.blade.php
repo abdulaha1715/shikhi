@@ -39,16 +39,6 @@
                             </a>
                         </li> <!-- end Dashboard Menu -->
                         <li class="nav-item">
-                            <a class="nav-link menu-link {{ request()->routeIs('category.*') ? 'active' : ''}}" href="{{ route('category.index') }}" role="button">
-                                <i class="mdi mdi-view-grid-plus-outline"></i> <span data-key="t-apps">Category</span>
-                            </a>
-                        </li> <!-- end Category Menu -->
-                        <li class="nav-item">
-                            <a class="nav-link menu-link {{ request()->routeIs('tag.*') ? 'active' : ''}}" href="{{ route('tag.index') }}" role="button">
-                                <i class="mdi mdi-view-grid-plus-outline"></i> <span data-key="t-apps">Tag</span>
-                            </a>
-                        </li> <!-- end Tag Menu -->
-                        <li class="nav-item">
                             <a class="nav-link menu-link {{ request()->routeIs('course.*') ? 'active' : ''}}"   href="#courseLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="courseLayouts">
                                 <i class="mdi mdi-view-carousel-outline"></i> <span data-key="t-layouts">Courses</span>
                             </a>
@@ -63,6 +53,16 @@
                                 </ul>
                             </div>
                         </li> <!-- end Course Menu -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('category.*') ? 'active' : ''}}" href="{{ route('category.index') }}" role="button">
+                                <i class="mdi mdi-view-grid-plus-outline"></i> <span data-key="t-apps">Category</span>
+                            </a>
+                        </li> <!-- end Category Menu -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('tag.*') ? 'active' : ''}}" href="{{ route('tag.index') }}" role="button">
+                                <i class="mdi mdi-view-grid-plus-outline"></i> <span data-key="t-apps">Tag</span>
+                            </a>
+                        </li> <!-- end Tag Menu -->
 
                         <li class="nav-item">
                             <a class="nav-link menu-link {{ request()->routeIs('profile.*') ? 'active' : ''}}" href="{{ route( 'profile.show', auth()->id() ) }}" role="button">
