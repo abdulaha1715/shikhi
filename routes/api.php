@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+
+Route::get('/courses', [CourseController::class, 'index']);
+Route::get('/course/{slug}', [CourseController::class, 'singleCourse']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/course/{slug}/enroll', [CourseController::class, 'CourseEnroll']);
+    Route::post('/course/{slug}/wishlist', [CourseController::class, 'Coursewishlist']);
+    Route::post('/course/{slug}/review', [CourseController::class, 'CourseReview']);
+    Route::get('/course/{slug}/lesson/{lesson}', [CourseController::class, 'CourseLesson']);
+});

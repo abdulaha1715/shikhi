@@ -22,8 +22,12 @@ class Course extends Model
     }
 
     // One to many Relationsip
-    public function lessons()
-    {
+    public function lessons() {
         return $this->hasMany(Lesson::class, 'course_id', 'id');
+    }
+
+    // One to many Relationsip
+    public function reviews() {
+        return $this->hasMany(Review::class, 'course_id', 'id');
     }
 }

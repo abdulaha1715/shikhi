@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('slug', 255);
-            $table->string('content', 255);
+            $table->longText('content');
             $table->enum('status', ['public', 'private'])->default('public');
             $table->foreignId('course_id');
             $table->timestamps();

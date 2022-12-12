@@ -30,6 +30,16 @@ class User extends Authenticatable
         return $this->hasOne(TeacherProfile::class, 'user_id');
     }
 
+    // Many to Many Relations
+    public function courses() {
+        return $this->belongsToMany(Course::class, 'courses_users', 'student_id', 'course_id')->withTimestamps();
+    }
+
+    // Many to Many Relations
+    public function wishlist() {
+        return $this->belongsToMany(Course::class, 'courses_users_wishlists', 'student_id', 'course_id')->withTimestamps();
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
