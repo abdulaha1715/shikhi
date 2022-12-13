@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/course/{slug}/wishlist', [CourseController::class, 'Coursewishlist']);
     Route::post('/course/{slug}/review', [CourseController::class, 'CourseReview']);
     Route::get('/course/{slug}/lesson/{lesson}', [CourseController::class, 'CourseLesson']);
+    // User Profile edit
+    Route::post('/profile/update-profile', [UserController::class, 'updateUser']);
 });
