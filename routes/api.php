@@ -34,4 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/course/{slug}/lesson/{lesson}', [CourseController::class, 'CourseLesson']);
     // User Profile edit
     Route::post('/profile/update-profile', [UserController::class, 'updateUser']);
+    // My Profile
+    Route::get('/me', [UserController::class, 'myProfile']);
+    // Mark as Complete
+    Route::post('/markascomplete', [CourseController::class, 'markAsComplete']);
 });

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CourseResource;
 use App\Http\Resources\UserResource;
+use Database\Factories\CourseFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -55,6 +57,33 @@ Class UserController extends Controller {
             return [
                 'error'   => false,
                 'message' => "Profile Updated Successfully!",
+            ];
+
+        } catch (\Throwable $th) {
+            return [
+                'error'   => true,
+                'message' => $th->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Update User method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function myProfile( )
+    {
+
+        try {
+            $user = User::find( auth()->id() );
+            /** @var User $user */
+
+            return [
+                'error'           => false,
+                'user'            => new UserResource($user),
+                'enroll_courses'  => collect($user->load('courses')->courses)->map(function($course) { return new CourseResource($course); }),
+                'complete_lessons' => $user->lessonComplete,
             ];
 
         } catch (\Throwable $th) {

@@ -31,6 +31,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class, 'courses_users_wishlists', 'student_id', 'course_id')->withTimestamps();
     }
 
+    // Many to Many Relations
+    public function lessonComplete() {
+        return $this->hasMany(LessonUser::class, 'student_id', 'id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

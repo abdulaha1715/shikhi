@@ -26,6 +26,11 @@ class Course extends Model
         return $this->hasMany(Lesson::class, 'course_id', 'id');
     }
 
+    // Many to Many Relations
+    public function students() {
+        return $this->belongsToMany(User::class, 'courses_users', 'course_id', 'student_id')->withTimestamps();
+    }
+
     // One to many Relationsip
     public function reviews() {
         return $this->hasMany(Review::class, 'course_id', 'id');

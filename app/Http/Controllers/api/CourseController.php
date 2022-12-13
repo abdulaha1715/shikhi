@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\Review;
+use App\Models\LessonUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\CourseResource;
 use App\Http\Resources\LessonResource;
-use App\Models\Lesson;
-use App\Models\Review;
 
 class CourseController extends Controller
 {
@@ -89,17 +90,14 @@ class CourseController extends Controller
                     'message' => "You already enroll this course!",
                 ];
             } else {
-                $user->courses()->sync([$course->id]);
+                $course->students()->sync([$user->id]);
+
                 $user->wishlist()->detach([$course->id]);
                 return [
                     'error'   => false,
                     'message' => "Course Enrolled Successfully!",
                 ];
             }
-
-
-
-
 
         } catch (\Throwable $th) {
             return [
@@ -158,10 +156,6 @@ class CourseController extends Controller
                     'message' => "Course added to Wishlist!",
                 ];
             }
-
-
-
-
 
         } catch (\Throwable $th) {
             return [
@@ -257,6 +251,72 @@ class CourseController extends Controller
             return [
                 'error' => false,
                 'data'  => new LessonResource($lesson)
+            ];
+
+        } catch (\Throwable $th) {
+            return [
+                'error'   => true,
+                'message' => $th->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * markAsComplete method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function markAsComplete( Request $request )
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer'],
+            'lesson_id' => ['required', 'integer'],
+        ]);
+
+        try {
+
+            $user = Auth::user();
+            /** @var User $user */
+
+            $checkenroll = $user->courses->find($request->course_id);
+
+            if ( ! $checkenroll ) {
+                return [
+                    'error'   => true,
+                    'message' => "You are unauthorized!",
+                ];
+            }
+
+            $course            = Course::find($request->course_id);
+            $request_lesson_id = $request->lesson_id;
+            $find_lesson_id    = $course->lessons()->where('id', $request_lesson_id)->get()->first();
+
+            if ( ! $find_lesson_id ) {
+                return [
+                    'error'   => true,
+                    'message' => "Lesson not found!",
+                ];
+            }
+
+            $lesson_user = LessonUser::where('course_id', $request->course_id)->where('lesson_id', $request->lesson_id)->where('student_id', $user->id)->get()->first();
+
+            if ( $lesson_user ) {
+                $lesson_user->delete();
+                return [
+                    'error'   => false,
+                    'message' => "Lesson marked as incomplete!",
+                ];
+            }
+
+            LessonUser::create([
+                'course_id'  => $request->course_id,
+                'lesson_id'  => $request->lesson_id,
+                'student_id' => $user->id,
+            ]);
+
+            return [
+                'error'   => false,
+                'message' => "Lesson marked as complete!",
             ];
 
         } catch (\Throwable $th) {
