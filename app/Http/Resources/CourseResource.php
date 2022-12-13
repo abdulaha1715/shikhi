@@ -14,7 +14,7 @@ class CourseResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $course_array = [
             'course_id'          => $this->id,
             'course_name'        => $this->name,
             'course_slug'        => $this->slug,
@@ -31,6 +31,13 @@ class CourseResource extends JsonResource
                 return new ReviewResource( $review );
             }),
             'last_update'        => $this->updated_at->format('d F, Y'),
+
         ];
+
+        if ( auth()->user() ) {
+            $course_array['Hello'] = "World";
+        }
+
+        return $course_array;
     }
 }
