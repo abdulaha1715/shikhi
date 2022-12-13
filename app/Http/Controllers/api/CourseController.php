@@ -205,7 +205,7 @@ class CourseController extends Controller
 
             $review = Review::where('course_id', $course->id)->where('student_id', $user->id)->get()->first();
 
-            Review::updateOrCreate(['id' => $review->id], [
+            Review::updateOrCreate([ 'id' => $review->id ?? "" ], [
                 'star'       => $request->star,
                 'content'    => $request->content,
                 'student_id' => $user->id,
