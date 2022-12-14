@@ -28,7 +28,12 @@ class Course extends Model
 
     // Many to Many Relations
     public function students() {
-        return $this->belongsToMany(User::class, 'courses_users', 'course_id', 'student_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'courses_users', 'course_id', 'student_id')->withPivot('status')->withTimestamps();
+    }
+
+    // Many to Many Relations
+    public function wishlist() {
+        return $this->belongsToMany(User::class, 'courses_users_wishlists', 'course_id', 'student_id');
     }
 
     // One to many Relationsip

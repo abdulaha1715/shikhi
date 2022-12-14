@@ -32,6 +32,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('course_id');
+            $table->enum('status', ['complete', 'incomplete'])->default('incomplete');
             $table->timestamps();
         });
 

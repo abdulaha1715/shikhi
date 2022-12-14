@@ -10,32 +10,33 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
+// Auth api
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+// Courses and Single course
 Route::get('/courses', [CourseController::class, 'index']);
 Route::get('/course/{slug}', [CourseController::class, 'singleCourse']);
 
+// Course lesson
+Route::get('/course/{slug}/lesson/{lesson}', [CourseController::class, 'CourseLesson']);
+
+// Auth Group
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/course/{slug}/enroll', [CourseController::class, 'CourseEnroll']);
-    Route::post('/course/{slug}/wishlist', [CourseController::class, 'Coursewishlist']);
-    Route::post('/course/{slug}/review', [CourseController::class, 'CourseReview']);
-    Route::get('/course/{slug}/lesson/{lesson}', [CourseController::class, 'CourseLesson']);
+    // Enroll
+    Route::post('/enroll', [CourseController::class, 'CourseEnroll']);
+    // Wishlist
+    Route::post('/wishlist', [CourseController::class, 'Coursewishlist']);
+    // Review
+    Route::post('/review', [CourseController::class, 'CourseReview']);
     // User Profile edit
     Route::post('/profile/update-profile', [UserController::class, 'updateUser']);
     // My Profile
     Route::get('/me', [UserController::class, 'myProfile']);
-    // Mark as Complete
-    Route::post('/markascomplete', [CourseController::class, 'markAsComplete']);
+    // Course Mark as Complete
+    Route::post('/markcourseascomplete', [CourseController::class, 'markCourseAsComplete']);
+    // Lesson Mark as Complete
+    Route::post('/marklessonascomplete', [CourseController::class, 'markLessonAsComplete']);
 });

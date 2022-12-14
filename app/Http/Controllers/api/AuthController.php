@@ -14,7 +14,7 @@ use Illuminate\Validation\Rules\Password;
 Class AuthController extends Controller {
 
     /**
-     * method register.
+     * Register method.
      *
      * @return \Illuminate\Http\Response
      */
@@ -74,7 +74,7 @@ Class AuthController extends Controller {
     }
 
     /**
-     * method login.
+     * Login method.
      *
      * @return \Illuminate\Http\Response
      */
@@ -87,7 +87,7 @@ Class AuthController extends Controller {
         ]);
 
         try {
-            // User Registration
+            // User input check
             if ( !Auth::attempt($request->only('email', 'password'))) {
                 // Response
                 return [
@@ -136,6 +136,11 @@ Class AuthController extends Controller {
         }
     }
 
+    /**
+     * DeleteUser method.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function deleteUser( Request $request )
     {
         try {

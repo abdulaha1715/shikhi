@@ -32,15 +32,19 @@ Class UserController extends Controller {
             $user = Auth::user();
             /** @var User $user */
 
+            // If user loged in
             if ( ! $user ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You need to login!",
                 ];
             }
 
+            // $user Thumbnail
             $thumbnail = $user->thumbnail;
 
+            // Delete old thumbnail and update with new one
             if ( !empty($request->file('thumbnail')) ) {
                 Storage::delete('public/uploads/'.$thumbnail);
 
@@ -54,12 +58,14 @@ Class UserController extends Controller {
                 'thumbnail' => $thumbnail
             ]);
 
+            // Response
             return [
                 'error'   => false,
                 'message' => "Profile Updated Successfully!",
             ];
 
         } catch (\Throwable $th) {
+            // Response
             return [
                 'error'   => true,
                 'message' => $th->getMessage(),
@@ -68,7 +74,7 @@ Class UserController extends Controller {
     }
 
     /**
-     * Update User method.
+     * myProfile method.
      *
      * @return \Illuminate\Http\Response
      */
@@ -79,11 +85,13 @@ Class UserController extends Controller {
             $user = User::find( auth()->id() );
             /** @var User $user */
 
+            // Response
             return [
                 'error'           => false,
                 'user'            => new UserResource($user),
                 'enroll_courses'  => collect($user->load('courses')->courses)->map(function($course) { return new CourseResource($course); }),
-                'complete_lessons' => $user->lessonComplete,
+                'wishlist'  => collect($user->load('wishlist')->wishlist)->map(function($course) { return new CourseResource($course); }),
+                'completed_courses'  => collect( $user->courses()->wherePivot('status', 'complete')->get() )->map(function($course) { return new CourseResource($course); }),
             ];
 
         } catch (\Throwable $th) {

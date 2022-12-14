@@ -17,7 +17,8 @@ class CourseController extends Controller
     /**
      * Index Method
      */
-    public function index() {
+    public function index()
+    {
         try {
             $courses = Course::where('status', 'active')->latest()->get();
 
@@ -41,16 +42,19 @@ class CourseController extends Controller
     /**
      * Single Course Method
      */
-    public function singleCourse( $slug ) {
+    public function singleCourse( $slug )
+    {
         try {
             $course = Course::where('slug', $slug)->where('status', 'active')->get()->first();
 
+            // Response
             return [
                 'error' => false,
                 'data'  => new CourseResource($course),
             ];
 
         } catch (\Throwable $th) {
+            // Response
             return [
                 'error'   => true,
                 'message' => $th->getMessage(),
@@ -61,21 +65,27 @@ class CourseController extends Controller
     /**
      * Course Enroll Method
      */
-    public function CourseEnroll( $slug ) {
+    public function CourseEnroll( Request $request )
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer']
+        ]);
+
         try {
             if ( ! Auth::user() ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You need to login!",
                 ];
             }
 
-            $course = Course::where('slug', $slug)->where('status', 'active')->get()->first();
+            $course = Course::find($request->course_id);
 
             $user = Auth::user();
             /** @var User $user */
 
-            $checkenroll = $user->courses->find($course->id);
+            $checkenroll = $course->students->find( $user->id );
 
             // if ( $enrollvar['attached'] != [] ) {
             //     return [
@@ -85,14 +95,16 @@ class CourseController extends Controller
             // }
 
             if ( $checkenroll ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You already enroll this course!",
                 ];
             } else {
                 $course->students()->sync([$user->id]);
+                $course->wishlist()->detach([$user->id]);
 
-                $user->wishlist()->detach([$course->id]);
+                // Response
                 return [
                     'error'   => false,
                     'message' => "Course Enrolled Successfully!",
@@ -100,6 +112,7 @@ class CourseController extends Controller
             }
 
         } catch (\Throwable $th) {
+            // Response
             return [
                 'error'   => true,
                 'message' => $th->getMessage(),
@@ -110,33 +123,40 @@ class CourseController extends Controller
     /**
      * Course Wishlist Method
      */
-    public function Coursewishlist( $slug ) {
+    public function Coursewishlist( Request $request )
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer']
+        ]);
+
         try {
             if ( ! Auth::user() ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You need to login!",
                 ];
             }
 
-            $course = Course::where('slug', $slug)->where('status', 'active')->get()->first();
+            $course = Course::findOrFail($request->course_id);
 
             $user = Auth::user();
             /** @var User $user */
 
 
-            $checkenroll = $user->courses->find($course->id);
-
+            $checkenroll   = $course->students->find( $user->id );
             $checkwishlist = $user->wishlist->find($course->id);
 
             // if ( $enrollvar['attached'] != [] ) {
-            //     return [
+            //     // Response
+            //      return [
             //         'error'   => false,
             //         'message' => "Course Enrolled Successfully!",
             //     ];
             // }
 
             if ( $checkenroll ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You already Enrolled this Course!",
@@ -144,13 +164,15 @@ class CourseController extends Controller
             }
 
             if ( $checkwishlist ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You already added to wishlist!",
                 ];
             } else {
-                $enrollvar = $user->wishlist()->sync([$course->id]);
+                $course->wishlist()->sync([$user->id]);
 
+                // Response
                 return [
                     'error'   => false,
                     'message' => "Course added to Wishlist!",
@@ -158,6 +180,7 @@ class CourseController extends Controller
             }
 
         } catch (\Throwable $th) {
+            // Response
             return [
                 'error'   => true,
                 'message' => $th->getMessage(),
@@ -168,29 +191,32 @@ class CourseController extends Controller
     /**
      * Course Review Method
      */
-    public function CourseReview( Request $request,$slug ) {
+    public function CourseReview( Request $request )
+    {
         $request->validate([
-            'star'    => ['required', 'numeric', "max:5"],
-            'content' => ['required', 'string'],
+            'course_id' => ['required', 'integer'],
+            'star'      => ['required', 'numeric', "max:5"],
+            'content'   => ['required', 'string'],
         ]);
 
         try {
             if ( ! Auth::user() ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You need to login!",
                 ];
             }
 
-            $course = Course::where('slug', $slug)->where('status', 'active')->get()->first();
+            $course = Course::find($request->course_id);
 
             $user = Auth::user();
             /** @var User $user */
 
-
-            $checkenroll = $user->courses->find($course->id);
+            $checkenroll = $course->students->find( $user->id );
 
             if ( ! $checkenroll ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "Your need to enroll first!",
@@ -215,12 +241,14 @@ class CourseController extends Controller
                 ]);
             }
 
+            // Response
             return [
                 'error'   => false,
                 'message' => "Your valuable review posted Successfully!",
             ];
 
         } catch (\Throwable $th) {
+            // Response
             return [
                 'error'   => true,
                 'message' => $th->getMessage(),
@@ -231,38 +259,40 @@ class CourseController extends Controller
     /**
      * Course Lesson Method
      */
-    public function CourseLesson( $course, $lesson ) {
+    public function CourseLesson( $course, $lesson )
+    {
 
         try {
-            if ( ! Auth::user() ) {
-                return [
-                    'error'   => true,
-                    'message' => "You need to login!",
-                ];
-            }
+
 
             $course = Course::where('slug', $course)->where('status', 'active')->get()->first();
 
-            $user = Auth::user();
-            /** @var User $user */
+            if ( auth()->user() ) {
+                $user = Auth::user();
+                /** @var User $user */
 
-            $checkenroll = $user->courses->find($course->id);
+                $lesson      = Lesson::where('slug', $lesson)->get()->first();
+                $checkenroll = $course->students->find( $user->id );
 
-            if ( ! $checkenroll ) {
+                if ( ! $checkenroll ) {
+                    // Response
                 return [
-                    'error'   => true,
-                    'message' => "Your need to enroll first!",
-                ];
+                        'error'   => true,
+                        'message' => "Your need to enroll first!",
+                    ];
+                }
+            } else {
+                $lesson = Lesson::where('slug', $lesson)->where('status', 'public')->get()->first();
             }
 
-            $lesson = Lesson::where('slug', $lesson)->where('status', 'public')->get()->first();
-
+            // Response
             return [
                 'error' => false,
-                'data'  => new LessonResource($lesson)
+                'data'  => $lesson ? new LessonResource($lesson) : "Your need to enroll first!",
             ];
 
         } catch (\Throwable $th) {
+            // Response
             return [
                 'error'   => true,
                 'message' => $th->getMessage(),
@@ -271,11 +301,65 @@ class CourseController extends Controller
     }
 
     /**
-     * markAsComplete method.
+     * markCourseAsComplete method.
      *
      * @return \Illuminate\Http\Response
      */
-    public function markAsComplete( Request $request )
+    public function markCourseAsComplete( Request $request )
+    {
+        $request->validate([
+            'course_id' => ['required', 'integer'],
+        ]);
+
+        try {
+
+            $user = Auth::user();
+            /** @var User $user */
+
+            $course      = Course::find($request->course_id);
+            $checkenroll = $course->students->find( $user->id );
+
+            if ( ! $checkenroll ) {
+                // Response
+                return [
+                    'error'   => true,
+                    'message' => "You are unauthorized!",
+                ];
+            }
+
+            $course = Course::find($request->course_id);
+
+            if ( ! $course ) {
+                // Response
+                return [
+                    'error'   => true,
+                    'message' => "Course not found!",
+                ];
+            }
+
+            $course->students()->updateExistingPivot( $user->id, array('status' => 'complete') );
+
+            // Response
+            return [
+                'error'   => false,
+                'message' => "Course marked as complete!",
+            ];
+
+        } catch (\Throwable $th) {
+            // Response
+            return [
+                'error'   => true,
+                'message' => $th->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * markLessonAsComplete method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function markLessonAsComplete( Request $request )
     {
         $request->validate([
             'course_id' => ['required', 'integer'],
@@ -287,9 +371,11 @@ class CourseController extends Controller
             $user = Auth::user();
             /** @var User $user */
 
-            $checkenroll = $user->courses->find($request->course_id);
+            $course      = Course::find($request->course_id);
+            $checkenroll = $course->students->find( $user->id );
 
             if ( ! $checkenroll ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "You are unauthorized!",
@@ -301,6 +387,7 @@ class CourseController extends Controller
             $find_lesson_id    = $course->lessons()->where('id', $request_lesson_id)->get()->first();
 
             if ( ! $find_lesson_id ) {
+                // Response
                 return [
                     'error'   => true,
                     'message' => "Lesson not found!",
@@ -311,6 +398,7 @@ class CourseController extends Controller
 
             if ( $lesson_user ) {
                 $lesson_user->delete();
+                // Response
                 return [
                     'error'   => false,
                     'message' => "Lesson marked as incomplete!",
@@ -323,12 +411,14 @@ class CourseController extends Controller
                 'student_id' => $user->id,
             ]);
 
+            // Response
             return [
                 'error'   => false,
                 'message' => "Lesson marked as complete!",
             ];
 
         } catch (\Throwable $th) {
+            // Response
             return [
                 'error'   => true,
                 'message' => $th->getMessage(),

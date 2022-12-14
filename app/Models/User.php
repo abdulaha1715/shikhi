@@ -23,7 +23,7 @@ class User extends Authenticatable
 
     // Many to Many Relations
     public function courses() {
-        return $this->belongsToMany(Course::class, 'courses_users', 'student_id', 'course_id')->withTimestamps();
+        return $this->belongsToMany(Course::class, 'courses_users', 'student_id', 'course_id')->withPivot('status')->withTimestamps();
     }
 
     // Many to Many Relations

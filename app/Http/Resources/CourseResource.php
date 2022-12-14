@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\LessonUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CourseResource extends JsonResource
@@ -35,7 +37,18 @@ class CourseResource extends JsonResource
         ];
 
         if ( auth()->user() ) {
-            $course_array['Hello'] = "World";
+            $user = Auth::user();
+            /** @var User $user */
+
+            $checkenroll = $this->students->find( $user->id );
+
+            if ( $checkenroll ) {
+                $total_lesson = count($this->lessons);
+                $lesson       = count(LessonUser::where('course_id', $this->id)->where('student_id', $user->id)->get());
+                $course_array['progress'] = $lesson > 0 ? (String)  number_format((float)($lesson/$total_lesson * 100), 2, '.', ''). "%" : "0%";
+                $course_array['status'] = ucfirst($this->pivot->status);
+            }
+
         }
 
         return $course_array;
