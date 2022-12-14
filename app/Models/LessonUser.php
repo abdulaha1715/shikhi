@@ -11,7 +11,7 @@ class LessonUser extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    //
+    // One to One Relations
     public function student() {
         return $this->belongsTo(User::class, 'student_id', 'id');
     }
