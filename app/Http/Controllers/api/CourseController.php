@@ -327,8 +327,6 @@ class CourseController extends Controller
                 ];
             }
 
-            $course = Course::find($request->course_id);
-
             if ( ! $course ) {
                 // Response
                 return [
@@ -382,7 +380,6 @@ class CourseController extends Controller
                 ];
             }
 
-            $course            = Course::find($request->course_id);
             $request_lesson_id = $request->lesson_id;
             $find_lesson_id    = $course->lessons()->where('id', $request_lesson_id)->get()->first();
 

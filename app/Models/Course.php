@@ -16,6 +16,11 @@ class Course extends Model
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
+    // One to many Relationsip
+    public function tags() {
+        return $this->hasMany(Tag::class, 'tag_id', 'id');
+    }
+
     // One to One Relationsip
     public function teacher() {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
