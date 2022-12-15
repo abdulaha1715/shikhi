@@ -14,12 +14,15 @@ class LessonResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $lesson_data = [
             'lesson_id'          => $this->id,
             'lesson_name'        => $this->name,
             'lesson_slug'        => $this->slug,
             'lesson_description' => $this->content,
+            'visiblity'          => $this->status,
             'last_update'        => $this->updated_at->format('d F, Y'),
         ];
+
+        return $lesson_data;
     }
 }

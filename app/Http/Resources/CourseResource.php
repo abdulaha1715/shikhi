@@ -27,7 +27,13 @@ class CourseResource extends JsonResource
             'course_category'    => $this->category->name,
             'course_teacher'     => new UserResource( $this->teacher ),
             'course_lessons'     => collect($this->lessons)->map(function($lesson) {
-                return new LessonResource( $lesson );
+                return [
+                    'lesson_id'          => $lesson->id,
+                    'lesson_name'        => $lesson->name,
+                    'lesson_slug'        => $lesson->slug,
+                    'visiblity'          => $lesson->status,
+                    'last_update'        => $lesson->updated_at->format('d F, Y'),
+                ];
             }),
             'course_reviews'     => collect($this->reviews)->map(function($review) {
                 return new ReviewResource( $review );
@@ -40,8 +46,10 @@ class CourseResource extends JsonResource
             $user = Auth::user();
             /** @var User $user */
 
+            // Check course enroll
             $checkenroll = $this->students->find( $user->id );
 
+            // Additional data base on course enroll or not
             if ( $checkenroll ) {
                 $total_lesson = count($this->lessons);
                 $lesson       = count(LessonUser::where('course_id', $this->id)->where('student_id', $user->id)->get());

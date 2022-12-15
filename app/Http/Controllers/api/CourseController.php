@@ -20,6 +20,7 @@ class CourseController extends Controller
     public function index()
     {
         try {
+            // All Courses
             $courses = Course::where('status', 'active')->latest()->get();
 
             // Response
@@ -45,6 +46,7 @@ class CourseController extends Controller
     public function singleCourse( $slug )
     {
         try {
+            // Find Course
             $course = Course::where('slug', $slug)->where('status', 'active')->get()->first();
 
             // Response
@@ -67,11 +69,13 @@ class CourseController extends Controller
      */
     public function CourseEnroll( Request $request )
     {
+        // Validation
         $request->validate([
             'course_id' => ['required', 'integer']
         ]);
 
         try {
+            // Check user logged in
             if ( ! Auth::user() ) {
                 // Response
                 return [
@@ -80,11 +84,13 @@ class CourseController extends Controller
                 ];
             }
 
+            // Find Course
             $course = Course::find($request->course_id);
 
             $user = Auth::user();
             /** @var User $user */
 
+            // Check Enroll Course
             $checkenroll = $course->students->find( $user->id );
 
             // if ( $enrollvar['attached'] != [] ) {
@@ -94,6 +100,7 @@ class CourseController extends Controller
             //     ];
             // }
 
+            // Course enroll conditionally
             if ( $checkenroll ) {
                 // Response
                 return [
@@ -101,7 +108,9 @@ class CourseController extends Controller
                     'message' => "You already enroll this course!",
                 ];
             } else {
+                // Enroll Course
                 $course->students()->sync([$user->id]);
+                // Remove Course from Wishlist
                 $course->wishlist()->detach([$user->id]);
 
                 // Response
@@ -125,11 +134,13 @@ class CourseController extends Controller
      */
     public function Coursewishlist( Request $request )
     {
+        // Validation
         $request->validate([
             'course_id' => ['required', 'integer']
         ]);
 
         try {
+            // Check user logged in
             if ( ! Auth::user() ) {
                 // Response
                 return [
@@ -138,13 +149,15 @@ class CourseController extends Controller
                 ];
             }
 
+            // Find Course
             $course = Course::findOrFail($request->course_id);
 
             $user = Auth::user();
             /** @var User $user */
 
-
+            // Check Enroll Course
             $checkenroll   = $course->students->find( $user->id );
+            // Check Course Wishlist
             $checkwishlist = $user->wishlist->find($course->id);
 
             // if ( $enrollvar['attached'] != [] ) {
@@ -155,6 +168,7 @@ class CourseController extends Controller
             //     ];
             // }
 
+            // Check Couses enroll or not
             if ( $checkenroll ) {
                 // Response
                 return [
@@ -163,6 +177,7 @@ class CourseController extends Controller
                 ];
             }
 
+            // Course added wishlist conditionally
             if ( $checkwishlist ) {
                 // Response
                 return [
@@ -170,6 +185,7 @@ class CourseController extends Controller
                     'message' => "You already added to wishlist!",
                 ];
             } else {
+                // Course add in wishlist
                 $course->wishlist()->sync([$user->id]);
 
                 // Response
@@ -193,6 +209,7 @@ class CourseController extends Controller
      */
     public function CourseReview( Request $request )
     {
+        // Validation
         $request->validate([
             'course_id' => ['required', 'integer'],
             'star'      => ['required', 'numeric', "max:5"],
@@ -200,6 +217,7 @@ class CourseController extends Controller
         ]);
 
         try {
+            // Check user logged in
             if ( ! Auth::user() ) {
                 // Response
                 return [
@@ -208,13 +226,16 @@ class CourseController extends Controller
                 ];
             }
 
+            // Find Course
             $course = Course::find($request->course_id);
 
             $user = Auth::user();
             /** @var User $user */
 
+            // Check Enroll Course
             $checkenroll = $course->students->find( $user->id );
 
+            // Check Couses enroll or not
             if ( ! $checkenroll ) {
                 // Response
                 return [
@@ -223,9 +244,11 @@ class CourseController extends Controller
                 ];
             }
 
+            // Check and get Review from database
             $review = Review::where('course_id', $course->id)->where('student_id', $user->id)->get()->first();
 
             if ( $review ) {
+                // Update review
                 $review->update([
                     'star'       => $request->star,
                     'content'    => $request->content,
@@ -233,6 +256,7 @@ class CourseController extends Controller
                     'course_id'  => $course->id
                 ]);
             } else {
+                // Create Review
                 Review::create([
                     'star'       => $request->star,
                     'content'    => $request->content,
@@ -263,27 +287,43 @@ class CourseController extends Controller
     {
 
         try {
-
-
+            // Find Course
             $course = Course::where('slug', $course)->where('status', 'active')->get()->first();
+            // Find Course lesson
+            $lesson = Lesson::where('slug', $lesson)->where('course_id', $course->id);
 
+            // Check Course lesson
+            if ( ! $lesson->get()->first() ) {
+                // Response
+                 return [
+                    'error'   => true,
+                    'message' => "Lesson not found!",
+                ];
+            }
+
+            // Get Lesson base on User
             if ( auth()->user() ) {
                 $user = Auth::user();
                 /** @var User $user */
 
-                $lesson      = Lesson::where('slug', $lesson)->get()->first();
+                // Get Course Lesson
                 $checkenroll = $course->students->find( $user->id );
 
+                // Check Course Enroll or not
                 if ( ! $checkenroll ) {
                     // Response
-                return [
+                    return [
                         'error'   => true,
                         'message' => "Your need to enroll first!",
                     ];
                 }
             } else {
-                $lesson = Lesson::where('slug', $lesson)->where('status', 'public')->get()->first();
+                // All public lesson
+                $lesson = $lesson->where('status', 'public');
             }
+
+            // Lesson Get first
+            $lesson = $lesson->get()->first();
 
             // Response
             return [
@@ -307,18 +347,22 @@ class CourseController extends Controller
      */
     public function markCourseAsComplete( Request $request )
     {
+        // Validation
         $request->validate([
             'course_id' => ['required', 'integer'],
         ]);
 
         try {
-
             $user = Auth::user();
             /** @var User $user */
 
+
+            // Find Course
             $course      = Course::find($request->course_id);
+            // Check Enroll Course
             $checkenroll = $course->students->find( $user->id );
 
+            // Check Course Enroll or not
             if ( ! $checkenroll ) {
                 // Response
                 return [
@@ -327,6 +371,7 @@ class CourseController extends Controller
                 ];
             }
 
+            // Check Course
             if ( ! $course ) {
                 // Response
                 return [
@@ -335,6 +380,7 @@ class CourseController extends Controller
                 ];
             }
 
+            // Update Course status in pivot table
             $course->students()->updateExistingPivot( $user->id, array('status' => 'complete') );
 
             // Response
@@ -359,19 +405,22 @@ class CourseController extends Controller
      */
     public function markLessonAsComplete( Request $request )
     {
+        // Validation
         $request->validate([
             'course_id' => ['required', 'integer'],
             'lesson_id' => ['required', 'integer'],
         ]);
 
         try {
-
             $user = Auth::user();
             /** @var User $user */
 
+            // Find Course
             $course      = Course::find($request->course_id);
+            // Check Enroll Course
             $checkenroll = $course->students->find( $user->id );
 
+            // Check Course Enroll or not
             if ( ! $checkenroll ) {
                 // Response
                 return [
@@ -380,9 +429,12 @@ class CourseController extends Controller
                 ];
             }
 
+            // Get Lesson Id from request
             $request_lesson_id = $request->lesson_id;
+            // Get Lesson Id from database
             $find_lesson_id    = $course->lessons()->where('id', $request_lesson_id)->get()->first();
 
+            // Check Lesson
             if ( ! $find_lesson_id ) {
                 // Response
                 return [
@@ -391,8 +443,10 @@ class CourseController extends Controller
                 ];
             }
 
+            // Get User lesson from specific Course
             $lesson_user = LessonUser::where('course_id', $request->course_id)->where('lesson_id', $request->lesson_id)->where('student_id', $user->id)->get()->first();
 
+            // Course Delete or Make as Incomplete
             if ( $lesson_user ) {
                 $lesson_user->delete();
                 // Response
@@ -402,6 +456,7 @@ class CourseController extends Controller
                 ];
             }
 
+            // Course Make as Complete
             LessonUser::create([
                 'course_id'  => $request->course_id,
                 'lesson_id'  => $request->lesson_id,
