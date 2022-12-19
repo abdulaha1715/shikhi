@@ -27,7 +27,7 @@ class CourseFactory extends Factory
             'name'        => $name,
             'slug'        => Str::slug($name),
             'description' => $note,
-            'thumbnail'   => fake()->name(),
+            'thumbnail'   => 'https://picsum.photos/1000?random='.rand(1, 500),
             'side_note'   => $note ,
             'level'       => $level[rand(0, 2)],
             'status'      => $status[rand(0, 1)],

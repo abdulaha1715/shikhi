@@ -21,11 +21,14 @@ class CourseResource extends JsonResource
             'course_name'        => $this->name,
             'course_slug'        => $this->slug,
             'course_description' => $this->description,
-            'course_thumb'       => $this->thumbnail,
+            'course_thumb'       => getAssetsUrl($this->thumbnail, 'uploads'),
             'course_side_note'   => $this->side_note,
             'course_level'       => $this->level,
             'course_category'    => $this->category->name,
             'course_teacher'     => new UserResource( $this->teacher ),
+            'course_students'     => collect($this->students)->map(function($student) {
+                return new UserResource( $student );
+            }),
             'course_lessons'     => collect($this->lessons)->map(function($lesson) {
                 return [
                     'lesson_id'          => $lesson->id,

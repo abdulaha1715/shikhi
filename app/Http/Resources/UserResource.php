@@ -17,6 +17,7 @@ class UserResource extends JsonResource
         return [
             'user_id'     => $this->id,
             'user_name'   => $this->name,
+            'user_thumb'  => getAssetsUrl($this->thumbnail, 'uploads'),
             'user_email'  => $this->email,
             'last_update' => $this->updated_at->format('d F, Y'),
         ];
