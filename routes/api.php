@@ -25,6 +25,8 @@ Route::get('/course/{slug}/lesson/{lesson}', [CourseController::class, 'CourseLe
 
 // Auth Group
 Route::middleware('auth:sanctum')->group(function () {
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout']);
     // Enroll
     Route::post('/enroll', [CourseController::class, 'CourseEnroll']);
     // Wishlist

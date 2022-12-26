@@ -137,6 +137,25 @@ Class AuthController extends Controller {
     }
 
     /**
+     * Logout method.
+     */
+    public function logout() {
+        try {
+            $user = Auth::user();
+            /** @var User $user */
+
+            // Logout trigger
+            $user->logout();
+        } catch (\Throwable $th) {
+            // Response
+            return [
+                'error'    => true,
+                'message'  => $th->getMessage(),
+            ];
+        }
+    }
+
+    /**
      * DeleteUser method.
      *
      * @return \Illuminate\Http\Response
