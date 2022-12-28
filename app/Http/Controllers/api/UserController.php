@@ -87,11 +87,11 @@ Class UserController extends Controller {
 
             // Response
             return [
-                'error'           => false,
-                'user'            => new UserResource($user),
-                'enroll_courses'  => collect($user->load('courses')->courses)->map(function($course) { return new CourseResource($course); }),
-                'wishlist'  => collect($user->load('wishlist')->wishlist)->map(function($course) { return new CourseResource($course); }),
-                'completed_courses'  => collect( $user->courses()->wherePivot('status', 'complete')->get() )->map(function($course) { return new CourseResource($course); }),
+                'error'             => false,
+                'profile'           => new UserResource($user),
+                'enroll_courses'    => collect($user->load('courses')->courses)->map(function($course) { return new CourseResource($course); }),
+                'wishlist'          => collect($user->load('wishlist')->wishlist)->map(function($course) { return new CourseResource($course); }),
+                'completed_courses' => collect( $user->courses()->wherePivot('status', 'complete')->get() )->map(function($course) { return new CourseResource($course); }),
             ];
 
         } catch (\Throwable $th) {
