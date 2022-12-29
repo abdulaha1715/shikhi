@@ -23,8 +23,10 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name'              => 'Abdulaha Islam',
             'email'             => 'abdulahaislam210917@gmail.com',
-            'thumbnail'             => 'https://picsum.photos/300?random='.rand(1, 500),
+            'thumbnail'         => 'https://picsum.photos/300?random='.rand(1, 500),
             'password'          => bcrypt('01918786189'),
+            'mobile'            => '01918786189',
+            'location'          => "Bangladesh",
             'email_verified_at' => now(),
         ]);
 

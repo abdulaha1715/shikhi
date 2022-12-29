@@ -22,6 +22,8 @@ class UserFactory extends Factory
             'email'             => fake()->unique()->safeEmail(),
             'thumbnail'         => 'https://picsum.photos/300?random='.rand(1, 500),
             'email_verified_at' => now(),
+            'mobile'            => fake()->phoneNumber(),
+            'location'          => fake()->country(),
             'password'          => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token'    => Str::random(10),
         ];
